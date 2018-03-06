@@ -1,0 +1,24 @@
+javascript:
+  var roomno = #{{@roomno.to_json}}
+  var username = #{{@username.to_json}}
+
+script src="/room.js"
+script src="/chat.js"
+
+ul#members
+  - @users.each do |u|
+    li = u[:name]
+
+- if @users.length < 4
+  .message 人数が集まるまでお待ち下さい
+
+.chat
+  table.list
+    thead
+      tr
+        th.name 名前
+        th メッセージ
+    tbody
+  textarea.input_chat
+  button.reload 読込
+  button.submit 送信

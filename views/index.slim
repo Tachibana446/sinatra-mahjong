@@ -1,0 +1,11 @@
+p hello world
+
+form action="/room" method="post"
+  p
+    label 名前:
+    input type="text" name="name" size="40" required=true
+  p
+    label 部屋番号:
+    input type="number" name="roomno" min="0" max="9999" required=true
+
+  input type="submit" value="入室"

@@ -1,0 +1,7 @@
+th.name {
+  width: 20%;
+}
+
+.chat>.list {
+  min-height: 200px;
+}
