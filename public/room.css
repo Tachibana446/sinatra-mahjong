@@ -1,5 +1,18 @@
+body {
+  background-color: #91AB00;
+}
+
+header {
+  background-color: #6B0321;
+}
+
 th.name {
   width: 20%;
+}
+
+.chat {
+  position: absolute;
+  background-color: white;
 }
 
 .chat>.list {

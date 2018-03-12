@@ -12,7 +12,7 @@ ul#members
 - if @users.length < 4
   .message 人数が集まるまでお待ち下さい
 
-.chat
+.chat draggable="true"
   table.list
     thead
       tr
@@ -22,3 +22,7 @@ ul#members
   textarea.input_chat
   button.reload 読込
   button.submit 送信
+
+.debug
+  a href="/room_init"
+    button 牌のリセット

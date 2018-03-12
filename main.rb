@@ -2,6 +2,7 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'slim'
 require 'json'
+require './card.rb'
 
 enable :sessions
 
@@ -101,4 +102,29 @@ post '/chat/:no' do |no|
     end
   end
   @data.to_json
+end
+
+def init_pais(room)
+  deck = []
+  4.times do
+    Mahjong.Card.create_supais do |p|
+      deck << p
+    end
+    Mahjong.Card.create_jihais do |p|
+      deck << p
+    end
+  end
+  room[:deck] = deck
+  room
+end
+
+get '/room_init' do
+  roomno = session[:roomno]
+  File.open("data/room#{roomno}.txt", 'r') do |f|
+    @data = JSON.parse(f.readlines.join, symbolize_names: true)[:users]
+  end
+  init_pais @data[:room]
+  File.open("data/room#{roomno}.txt", 'w') do |f|
+    JSON.dump(@data, f)
+  end
 end
