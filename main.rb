@@ -45,6 +45,24 @@ get '/room/:no/my_info/:username' do |no, name|
   @data.to_json
 end
 
+# 牌を切る
+post '/room/:no/discard/' do |no|
+  File.open("data/room#{no}.txt", 'r') do |f|
+    @data = JSON.parse(f.readline, symbolize_names: true)
+  end
+  player = @data[:users].select { |u| u[:name] == params[:name] }.first
+  return 'no player' unless player
+  return 'wait' if @data[:room][:now_player] == player[:kaze]
+  pai = player[:hand].select { |p| p.to_s == params[:pai] }.first
+  return 'no pai' unless pai
+  player[:discard] ||= [] << pai
+  player[:hand].delete pai
+  File.open("data/room#{no}.txt", 'w') do |f|
+    JSON.dump(@data, f)
+  end
+  'ok'
+end
+
 post '/room' do
   id = rand(100)
   session[:id] = id
@@ -139,6 +157,7 @@ get '/room_init' do
   @data[:room][:deck] = Mahjong::Card.init_pais
   @data[:room][:wanpai] = Mahjong::Card.create_wanpai @data[:room][:deck]
   @data[:room][:dora_display] = [] << @data[:room][:wanpai].pop
+  @data[:room][:now_player] = :ton
 
   Mahjong::Card.haipai @data[:room][:deck], @data[:users]
   File.open("data/room#{roomno}.txt", 'w') do |f|
