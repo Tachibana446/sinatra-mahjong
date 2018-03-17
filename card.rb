@@ -1,6 +1,23 @@
+require 'sinatra/reloader'
+
 module Mahjong
   # 麻雀牌のクラス
   class Card
+    # 字牌のシンボルリストを返す
+    JIHAI_LIST = %i[ton nan sha pei haku hatsu chun].freeze
+    # 風牌のリストを返す
+    KAZE_LIST = %i[ton nan sha pei].freeze
+    # 三元牌のリストを返す
+    SANGEN_LIST = %i[haku hatsu chun].freeze
+
+    # 数牌のソートのリスト
+    SUPAI_LIST = %i[pinz sorz manz].freeze
+
+    # 字牌のソートのリスト
+    JIHAI_TYPES = %i[sangen kaze].freeze
+
+    attr_reader :sort, :isnumber, :number, :moji
+
     # コンストラクタ
     # ==== Args
     # _sort_ :: 萬子・筒子・索子・三元・風(:manz :sorz :pinz :sangen :kaze)のいずれか
@@ -8,13 +25,13 @@ module Mahjong
     def initialize(sort, number_or_str)
       @sort = sort
       # エラーチェック
-      if supai_list.include? @sort
+      if SUPAI_LIST.include? @sort
         @isnumber = true
-        raise '数字が範囲をオーバーしています' if number_or_str <= 0 || number > 9
+        raise '数字が範囲をオーバーしています' if number_or_str <= 0 || number_or_str > 9
         @number = number_or_str
-      elsif jihai_sort_list.include? @sort
+      elsif JIHAI_TYPES.include? @sort
         @isnumber = false
-        raise '字牌がおかしい' unless jihai_list.include? number_or_str
+        raise '字牌がおかしい' unless JIHAI_LIST.include? number_or_str
         @moji = number_or_str
       else
         raise 'ソートが違います'
@@ -38,52 +55,26 @@ module Mahjong
       end
     end
 
-    # 字牌のシンボルリストを返す
-    # ==== Return
-    # :ton :nan :sha :pei :haku :hatsu :chun
-    def self.jihai_list
-      %i[ton nan sha pei haku hatsu chun]
-    end
-
-    # 風牌のリストを返す
-    def self.kaze_list
-      %i[ton nan sha pei]
-    end
-
-    # 三元牌のリストを返す
-    def self.sangen_list
-      %i[haku hatsu chun]
-    end
-
-    # 数牌のソートのリスト
-    # ==== Return
-    # :pinz :sorz :manz
-    def self.supai_list
-      %i[pinz sorz manz]
-    end
-
-    # 字牌のソートのリスト
-    # ==== Return
-    # :sangen :kaze
-    def self.jihai_sort_list
-      %i[sangen kaze]
-    end
-
     def self.create_supais
-      supai_list.each do |sort|
-        1..9.each do |n|
+      SUPAI_LIST.each do |sort|
+        (1..9).each do |n|
           yield Card.new sort, n
         end
       end
     end
 
     def self.create_jihais
-      sangen_list.each do |moji|
+      SANGEN_LIST.each do |moji|
         yield Card.new :sangen, moji
       end
-      kaze.each do |moji|
+      KAZE_LIST.each do |moji|
         yield Card.new :kaze, moji
       end
+    end
+
+    def ==(other)
+      (@sort == other.sort && @isnumber == other.isnumber &&
+        @number == other.number && @moji == other.moji)
     end
   end
 end

@@ -10,8 +10,12 @@ th.name {
   width: 20%;
 }
 
+.game {
+  background-color: white;
+}
+
 .chat {
-  position: absolute;
+  /* position: absolute; */
   background-color: white;
 }
 

@@ -107,10 +107,10 @@ end
 def init_pais(room)
   deck = []
   4.times do
-    Mahjong.Card.create_supais do |p|
+    Mahjong::Card.create_supais do |p|
       deck << p
     end
-    Mahjong.Card.create_jihais do |p|
+    Mahjong::Card.create_jihais do |p|
       deck << p
     end
   end
@@ -121,8 +121,9 @@ end
 get '/room_init' do
   roomno = session[:roomno]
   File.open("data/room#{roomno}.txt", 'r') do |f|
-    @data = JSON.parse(f.readlines.join, symbolize_names: true)[:users]
+    @data = JSON.parse(f.readlines.join, symbolize_names: true)
   end
+  @data[:room] ||= {}
   init_pais @data[:room]
   File.open("data/room#{roomno}.txt", 'w') do |f|
     JSON.dump(@data, f)

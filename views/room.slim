@@ -5,12 +5,13 @@ javascript:
 script src="/room.js"
 script src="/chat.js"
 
-ul#members
-  - @users.each do |u|
-    li = u[:name]
+.game
+  ul#members
+    - @users.each do |u|
+      li = u[:name]
 
-- if @users.length < 4
-  .message 人数が集まるまでお待ち下さい
+  - if @users.length < 4
+    .message 人数が集まるまでお待ち下さい
 
 .chat draggable="true"
   table.list
