@@ -112,5 +112,16 @@ module Mahjong
       oya[:hand] << deck.pop # 親は一枚多い
       [deck, players]
     end
+
+    # 対象の家が自分から見てどの位置か
+    # ==== Args
+    # _player_ :: シンボル
+    # _other_ :: シンボル
+    def self.relative_position(player, other)
+      p other
+      p player
+      diff = KAZE_LIST.index(other.to_sym) - KAZE_LIST.index(player.to_sym)
+      %i[none right forward left][diff % 4]
+    end
   end
 end

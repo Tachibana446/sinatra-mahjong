@@ -28,6 +28,23 @@ get '/room/detail_json/:no?' do |no|
   slim :room_detail_json
 end
 
+# 自分が見れる情報を取得
+get '/room/:no/my_info/:username' do |no, name|
+  roomno = no
+  File.open("data/room#{roomno}.txt", 'r') do |f|
+    @data = JSON.parse(f.readline, symbolize_names: true)
+  end
+  @data[:room][:deck] = @data[:room][:deck].length
+  @data[:room][:wanpai] = @data[:room][:wanpai].length
+  kaze = @data[:users].select { |u| u[:name] == name }.first[:kaze]
+  @data[:users].reject { |u| u[:name] == name }.each do |u|
+    u[:hand_length] = u[:hand].length
+    u[:hand] = []
+    u[:position] = Mahjong::Card.relative_position(kaze, u[:kaze])
+  end
+  @data.to_json
+end
+
 post '/room' do
   id = rand(100)
   session[:id] = id

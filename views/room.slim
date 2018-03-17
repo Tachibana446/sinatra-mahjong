@@ -13,6 +13,24 @@ script src="/chat.js"
   - if @users.length < 4
     .message 人数が集まるまでお待ち下さい
 
+.playarea
+  .wanpai
+    ._count
+      header 王牌
+      .count
+    .dora
+  .deck
+    ._count
+      header 山
+      .count
+  .ohter_players
+    - 3.times do
+      .hand
+      .discard
+  header 自分
+    .my_discard
+    .my_hand
+
 .chat draggable="true"
   table.list
     thead

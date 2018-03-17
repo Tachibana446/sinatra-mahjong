@@ -41,5 +41,11 @@ module Mahjong
 
       assert_equal 14, wanpai.length
     end
+
+    def test_relative_position
+      assert_equal :forward, Card.relative_position(:ton, :sha)
+      assert_equal :forward, Card.relative_position(:sha, :ton)
+      assert_equal :left, Card.relative_position(:pei, :sha)
+    end
   end
 end
