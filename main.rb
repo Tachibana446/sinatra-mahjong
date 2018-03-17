@@ -20,6 +20,14 @@ get '/logout' do
   redirect '/'
 end
 
+get '/room/detail_json/:no?' do |no|
+  @roomno = no || session[:roomno]
+  File.open("data/room#{@roomno}.txt", 'r') do |f|
+    @data = JSON.parse(f.readline, symbolize_names: true)
+  end
+  slim :room_detail_json
+end
+
 post '/room' do
   id = rand(100)
   session[:id] = id
