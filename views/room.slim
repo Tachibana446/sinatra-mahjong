@@ -6,6 +6,7 @@ script src="/room.js"
 script src="/chat.js"
 
 .game
+  header メンバー
   ul#members
     - @users.each do |u|
       li = u[:name]
@@ -24,10 +25,13 @@ script src="/chat.js"
       header 山
       .count
   .ohter_players
-    - 3.times do
-      .hand
-      .discard
-  header 自分
+    - @users.reject{ |u| u[:name] == @username }.each do |u|
+      .other_player
+        header = "#{u[:name].to_s}"
+        div.hand
+        div.discard
+  .my_player
+    header 自分
     .my_discard
     .my_hand
 
