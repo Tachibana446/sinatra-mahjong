@@ -1,0 +1,17 @@
+table
+  thead
+    tr
+      th ルーム番号
+      th メンバー人数
+      th メンバー
+      th メンバー
+      th メンバー
+      th メンバー
+
+  tbody
+    - @data.each do |k,v|
+      tr
+        td = k
+        td = @data[k].length
+        - @data[k].each do |m|
+          td = m[:name]

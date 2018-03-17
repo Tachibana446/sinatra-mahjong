@@ -129,3 +129,16 @@ get '/room_init' do
     JSON.dump(@data, f)
   end
 end
+
+# 部屋の状況
+get '/rooms/members' do
+  files = Dir.entries('data').select { |f| /^room\d+/ =~ f }
+  @data = {}
+  files.each do |fname|
+    File.open("data/#{fname}", 'r') do |f|
+      d = JSON.parse(f.readline, symbolize_names: true)
+      @data[fname.sub(/\..+$/, '')] = d[:users]
+    end
+  end
+  slim :rooms_members
+end
