@@ -112,27 +112,18 @@ post '/chat/:no' do |no|
   @data.to_json
 end
 
-def init_pais(room)
-  deck = []
-  4.times do
-    Mahjong::Card.create_supais do |p|
-      deck << p
-    end
-    Mahjong::Card.create_jihais do |p|
-      deck << p
-    end
-  end
-  room[:deck] = deck
-  room
-end
-
 get '/room_init' do
   roomno = session[:roomno]
   File.open("data/room#{roomno}.txt", 'r') do |f|
     @data = JSON.parse(f.readlines.join, symbolize_names: true)
   end
+  4.times { |i| @data[:users][i][:kaze] = Mahjong::Card::KAZE_LIST[i] }
   @data[:room] ||= {}
-  init_pais @data[:room]
+  @data[:room][:deck] = Mahjong::Card.init_pais
+  @data[:room][:wanpai] = Mahjong::Card.create_wanpai @data[:room][:deck]
+  @data[:room][:dora_display] = [] << @data[:room][:wanpai].pop
+
+  Mahjong::Card.haipai @data[:room][:deck], @data[:users]
   File.open("data/room#{roomno}.txt", 'w') do |f|
     JSON.dump(@data, f)
   end

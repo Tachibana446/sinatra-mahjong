@@ -30,5 +30,16 @@ module Mahjong
       assert_equal true, a[0] == b
       assert_equal true, a[3] == c
     end
+
+    def test_haipai
+      players = [
+        { kaze: :ton }, { kaze: :nan }, { kaze: :sha }, { kaze: :pei }
+      ]
+      deck = Card.init_pais
+      wanpai = Card.create_wanpai deck
+      Card.haipai deck, players
+
+      assert_equal 14, wanpai.length
+    end
   end
 end

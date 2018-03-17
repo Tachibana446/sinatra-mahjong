@@ -76,5 +76,41 @@ module Mahjong
       (@sort == other.sort && @isnumber == other.isnumber &&
         @number == other.number && @moji == other.moji)
     end
+
+    # 各牌が4枚ずつはいった配列を返す
+    # ==== Return
+    # Array [Card]
+    def self.init_pais
+      deck = []
+      4.times do
+        Card.create_supais do |p|
+          deck << p
+        end
+        Card.create_jihais do |p|
+          deck << p
+        end
+      end
+      deck.shuffle
+    end
+
+    # 王牌14枚
+    # ==== Args
+    # _deck_ :: Array [Card]
+    def self.create_wanpai(deck)
+      deck.pop 14
+    end
+
+    # プレイヤーに配牌する
+    # ==== Args
+    # _deck_ :: Array [Card]
+    # _players_ :: Array [Hash], 4人以上
+    def self.haipai(deck, players)
+      4.times do |i|
+        players[i][:hand] = deck.pop 13
+      end
+      oya = (players.slice(0...4).select { |p| p[:kaze] == :ton }).first
+      oya[:hand] << deck.pop # 親は一枚多い
+      [deck, players]
+    end
   end
 end
